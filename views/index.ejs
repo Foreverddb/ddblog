@@ -1,2 +1,21 @@
 <%- contentFor('pageContent') %>
 <h1><%= title %></h1>
+<form>
+    <input id="get" onchange="fuck(this)" placeholder="输入内容以get">
+    <input id="post" onchange="fuck(this)" placeholder="输入内容以post">
+    <p id="box"></p>
+</form>
+<script>
+    function fuck(input) {
+        $.ajax({
+            type: input.id,
+            url: '<%= url %>',
+            data: {
+                name: input.value
+            },
+            success: function (res) {
+                $("#box")[0].innerText = res;
+            }
+        });
+    }
+</script>

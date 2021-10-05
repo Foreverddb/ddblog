@@ -4,6 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var expressLayouts = require('express-ejs-layouts');
+var mongoStore = require('connect-mongo');
+var expressSession = require('express-session');
+var db = require('./models/db');
 
 
 var indexRouter = require('./routes/index');
@@ -21,6 +24,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(expressSession({
+  secret: "ddblog",
+  store: mongoStore.create({mongoUrl: db.url})
+}));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -42,3 +49,4 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
