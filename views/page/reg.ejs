@@ -1,0 +1,71 @@
+<div class="mdui-container mdui-theme-primary-indigo mdui-theme-accent-pink mdui-color-indigo mdui-m-t-5">
+    <div class="mdui-card">
+        <div class="mdui-card-content">
+            <form id="form" method="post" >
+                <h1 class="mdui-center"><%= title %></h1>
+                <div id="user-input" class="mdui-textfield mdui-textfield-floating-label">
+                    <label class="mdui-textfield-label">用户名（输入 3 至 8 个字符，不得包含特殊字符）</label>
+                    <input id="username" name="username" class="mdui-textfield-input" type="text" maxlength="8"/>
+                    <div class="mdui-textfield-error">用户名已存在</div>
+                </div>
+                <div class="mdui-textfield mdui-textfield-floating-label">
+                    <label class="mdui-textfield-label">密码（输入 6 至 20 个字符，不得包含特殊字符）</label>
+                    <input id="password" name="password" class="mdui-textfield-input" type="password" maxlength="20">
+                </div>
+                <div id="repass-input" class="mdui-textfield mdui-textfield-floating-label">
+                    <label class="mdui-textfield-label">确认密码（再输入一次密码以确认）</label>
+                    <input id="repass" name="repass" class="mdui-textfield-input" type="password">
+                    <div class="mdui-textfield-error">两次密码不一致</div>
+                </div>
+            </form>
+        </div>
+        <button onclick="reg_post()" class="mdui-m-a-2 mdui-btn mdui-btn-raised mdui-ripple mdui-color-indigo">确认</button>
+    </div>
+</div>
+
+<script>
+    function reg_post() {
+        //检验表单
+        if($('#username').val().length < 3 || $('#username').val().length > 8){
+            mdui.alert('用户名应满足 3 至 8 个字符，不得包含特殊字符');
+            $('#username').focus();
+            return false;
+        }
+        if($('#password').val().length < 6 || $('#password').val().length > 20){
+            mdui.alert('密码应满足 6 至 20 个字符，不得包含特殊字符');
+            return false;
+        }
+        if($('#repass').val() != $('#password').val()){
+            $('#repass-input').addClass('mdui-textfield-invalid');
+            return false;
+        }
+        else{
+            $('#repass-input').removeClass('mdui-textfield-invalid');
+        }
+        //发送数据
+        $.ajax({
+            type: 'post'
+            ,url: '/reg'
+            ,data: $("#form").serializeArray()
+            ,success: function (res) {
+                //alert(res);
+                res = JSON.parse(res);
+                if(res['user_exist']){
+                    $('#user-input').addClass('mdui-textfield-invalid');
+                }
+                else {
+                    $('#user-input').removeClass('mdui-textfield-invalid');
+                    mdui.alert("注册成功！即将跳转至登录页面！");
+                    setTimeout(function () {
+                        window.location = '/login';
+                    },2000);
+                }
+            }
+            ,error: function (res) {
+                alert(res);
+            }
+        });
+    }
+</script>
+<%- contentFor('title') %>
+<title><%= title %></title>

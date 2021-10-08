@@ -6,7 +6,7 @@ var logger = require('morgan');
 var expressLayouts = require('express-ejs-layouts');
 var mongoStore = require('connect-mongo');
 var expressSession = require('express-session');
-var db = require('./models/db');
+var db_config = require('./models/db-config');
 
 
 var indexRouter = require('./routes/index');
@@ -25,8 +25,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressSession({
-  secret: "ddblog",
-  store: mongoStore.create({mongoUrl: db.url})
+  secret: db_config.cookieSecret,
+  store: mongoStore.create({mongoUrl: db_config.host + db_config.name})
 }));
 
 app.use('/', indexRouter);
