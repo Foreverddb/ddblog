@@ -1,5 +1,5 @@
 var config = {
-  name: 'ddblog'
+  name: 'test'
   ,host: 'mongodb://localhost:27017/'
   ,cookieSecret: 'ddblog'
 };

@@ -19,7 +19,8 @@
                 </div>
             </form>
         </div>
-        <button onclick="reg_post()" class="mdui-m-a-2 mdui-btn mdui-btn-raised mdui-ripple mdui-color-indigo">确认</button>
+        <button onclick="reg_post()" class="mdui-m-a-2 mdui-btn mdui-btn-raised mdui-ripple mdui-color-indigo">确认注册</button>
+        <button onclick="javascript: window.location = '/login';" class="mdui-m-a-2 mdui-btn mdui-btn-raised mdui-ripple">前往登录</button>
     </div>
 </div>
 
@@ -35,7 +36,7 @@
             mdui.alert('密码应满足 6 至 20 个字符，不得包含特殊字符');
             return false;
         }
-        if($('#repass').val() != $('#password').val()){
+        if($('#repass').val().toString() != $('#password').val().toString()){
             $('#repass-input').addClass('mdui-textfield-invalid');
             return false;
         }
@@ -53,12 +54,15 @@
                 if(res['user_exist']){
                     $('#user-input').addClass('mdui-textfield-invalid');
                 }
-                else {
+                else if(res['acknowledged']){
                     $('#user-input').removeClass('mdui-textfield-invalid');
                     mdui.alert("注册成功！即将跳转至登录页面！");
                     setTimeout(function () {
                         window.location = '/login';
                     },2000);
+                }
+                else {
+                    mdui.alert('出现错误！注册失败');
                 }
             }
             ,error: function (res) {

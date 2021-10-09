@@ -7,7 +7,7 @@ var expressLayouts = require('express-ejs-layouts');
 var mongoStore = require('connect-mongo');
 var expressSession = require('express-session');
 var db_config = require('./models/db-config');
-
+var util = require('util');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -17,6 +17,8 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+
 
 app.use(expressLayouts);
 app.use(logger('dev'));
@@ -28,6 +30,13 @@ app.use(expressSession({
   secret: db_config.cookieSecret,
   store: mongoStore.create({mongoUrl: db_config.host + db_config.name})
 }));
+
+//视图助手，来控制登录与否的视图变化
+app.use(function (req,res,next){
+  res.locals.motto = 'A brief blog for listening';
+  res.locals.user = req.session.user;
+  next();
+});
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -42,7 +51,6 @@ app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
   // render the error page
   res.status(err.status || 500);
   res.render('error');
