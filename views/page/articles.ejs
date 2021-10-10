@@ -1,0 +1,82 @@
+<div class="mdui-m-a-2">
+    <img width="100%" src="<%= data.image %>">
+    <div class="mdui-typo-display-4">
+        <%= data.name %>
+    </div>
+    <div class="mdui-typo-subheading-opacity">
+        <%= data.time %>
+    </div>
+</div>
+<div class="mdui-divider"></div>
+
+<p>
+    <%= data.content %>
+</p>
+<div class="mdui-divider"></div>
+
+<div class="mdui-p-a-3">
+    <button id="getCommentBtn" onclick="get_comment();" class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-indigo">查看评论</button>
+
+    <div class="mdui-container-fluid" id="comment"></div>
+</div>
+
+<script>
+    function get_comment() {
+        $('#getCommentBtn').after(
+            <% if(!user){ %>
+            '&nbsp <button onclick="javascript:window.location = \'/reg\';" class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-indigo">注册并评论</button>'
+            <% }else{ %>
+            '&nbsp <button onclick="save_comment()" class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-indigo">发表评论</button><div class="mdui-textfield"><textarea id="comment_input" class="mdui-textfield-input" rows="3" placeholder="输入评论内容"></textarea></div>'
+            <% } %>
+        );
+        $('#getCommentBtn').hide();
+        $.ajax({
+            type: 'post'
+            , url: '/reviews'
+            , data: {
+                id: '<%= data._id %>'
+            }
+            , success: function (res) {
+                res = JSON.parse(res);
+                $('#comment').append('<div class="mdui-card"><div class="mdui-typo-headline mdui-m-a-2">评论内容：</div></div>');
+                if (res.length <= 0) {
+                    $('#comment').html('<div class="mdui-typo-subheading mdui-m-a-2"><strong>暂时还没有评论~</strong></div>');
+                } else {
+                    for (value in res) {
+                        let div = document.createElement('div');
+                        div.className = 'mdui-card';
+                        let html_string = '<div onclick="javascript: window.location = \'/users/' + res[value].user + '\';" class="mdui-card-header mdui-hoverable mdui-ripple"><img src="/images/avatar.png" class="mdui-card-header-avatar"><div class="mdui-card-header-title">' + res[value].user + '</div><div class="mdui-card-header-subtitle">' + res[value].time + '</div></div>';
+                        html_string += '<div class="mdui-divider-inset"></div><div class="mdui-card-content">' + res[value].content + '</div>';
+                        div.innerHTML = html_string;
+                        $('#comment').append(div);
+                    }
+                }
+            }
+            ,error: function (res) {
+                mdui.alert(res);
+            }
+        });
+    }
+    function save_comment() {
+        $.ajax({
+            type: 'post'
+            , url: '/reviews/post/'
+            , data: {
+                id: '<%= data._id %>'
+                ,content: $('#comment_input').val()
+            }
+            , success: function (res) {
+                res = JSON.parse(res);
+                if (res.acknowledged) {
+                    mdui.alert('评论成功！');
+                    window.location = window.location.href;
+                } else {
+                    mdui.alert('评论失败！出现错误！');
+                }
+            }
+            , error: function (res) {
+                mdui.alert(res);
+            }
+        });
+    }
+</script>

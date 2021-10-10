@@ -1,11 +1,13 @@
-<div overlay="true" class="mdui-appbar mdui-appbar-fixed">
+<div overlay="true" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-toolbar-hide">
     <div class="mdui-toolbar mdui-color-theme">
         <a mdui-drawer="{target: '#left-drawer'}" href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">menu</i></a>
         <a href="javascript:window.location = '/';" class="mdui-typo-headline">DdBlog</a>
         <a href="javascript:;" class="mdui-typo-title"><%= motto %></a>
         <div class="mdui-toolbar-spacer"></div>
-        <% if(user){ %>
-            <a href="javascript:;" mdui-tooltip="{content: '个人账号'}" class="mdui-btn"><i class="mdui-icon material-icons">account_circle</i> &nbsp<%= user.name %></a>
+        <% if(user){if(user.name == adminName){ %>
+            <a href="javascript:window.location = '/admin';" mdui-tooltip="{content: '后台管理'}" class="mdui-btn"><i class="mdui-icon material-icons">settings</i> &nbsp后台管理</a>
+        <% } %>
+            <a href="javascript:window.location = '/users/<%= user.name %>';" mdui-tooltip="{content: '个人账号'}" class="mdui-btn"><i class="mdui-icon material-icons">account_circle</i> &nbsp<%= user.name %></a>
             <a href="javascript:ajax_post('/logout');" mdui-tooltip="{content: '退出登录'}" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">exit_to_app</i></a>
         <% }else{ %>
             <a href="javascript:window.location = '/login';" mdui-tooltip="{content: '登录'}" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">record_voice_over</i></a>
@@ -14,7 +16,7 @@
     </div>
 </div>
 
-<div overlay="true" class="mdui-drawer mdui-drawer-close" id="left-drawer">
+<div overlay="true" class="mdui-drawer mdui-drawer-close" style="background-color: rgba(255,255,255,0.8);" id="left-drawer">
     <div class="mdui-list" mdui-collapse="{accordion: true}">
         <div class="mdui-collapse-item ">
             <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
@@ -24,8 +26,8 @@
         </div>
         <div class="mdui-collapse-item ">
             <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
-                <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">event</i>
-                <div class="mdui-list-item-content">归档</div>
+                <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">widgets</i>
+                <div class="mdui-list-item-content">分类</div>
                 <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
             </div>
             <div class="mdui-collapse-item-body mdui-list">
@@ -33,4 +35,9 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="mdui-container-fluid mdui-m-a-3 mdui-valign" style="height: 70vh;color: white">
+    <h1 class="mdui-typo-display-4-opacity"><%= blog_title %></h1>
+    <div class="mdui-card-primary-subtitle"><%= motto %><br><%= long_motto %></div>
 </div>

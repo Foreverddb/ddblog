@@ -50,6 +50,7 @@ User.prototype = {
                 ,pass: that.password
             };
             console.log(util.inspect(data));
+            dbo.collection('user').createIndex({'name':1});
             dbo.collection('user').insertOne(data,function (err, res) {
                 if(err){
                     console.log(err);

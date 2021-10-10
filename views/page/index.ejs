@@ -1,3 +1,47 @@
+<div class="mdui-container-fluid">
+    <div class="mdui-typo mdui-valign" style="min-height: 15vh;">
+        <blockquote class="mdui-m-a-2">
+            <p>无论走到哪里，都应该记住，过去都是假的，回忆是一条没有尽头的路，一切以往的春天都不复存在，就连那最坚韧而又狂乱的爱情归根结底也不过是一种转瞬即逝的现实。</p>
+            <footer>马尔克斯 ——《百年孤独》</footer>
+        </blockquote>
+    </div>
+    <div class="mdui-row mdui-grid-list">
+        <% for (value in articles){ %>
+            <div class="mdui-col-lg-4 mdui-col-md-6 mdui-col-sm-12 mdui-center mdui-hoverable">
+                <div onclick="javascipt:window.location = '/articles/<%= articles[value]['_id'] %>';"
+                     class="mdui-card mdui-m-a-2 mdui-card mdui-ripple mdui-float-left">
 
-<%- contentFor('title') %>
-<title><%= title %></title>
+                    <!-- 卡片的媒体内容，可以包含图片、视频等媒体内容，以及标题、副标题 -->
+                    <div class="mdui-card-media">
+                        <img src="https://cdn.w3cbus.com/mdui.org/docs/assets/docs/img/card.jpg"/>
+
+                        <!-- 卡片中可以包含一个或多个菜单按钮 -->
+                        <div class="mdui-card-menu">
+                            <button class="mdui-btn mdui-btn-icon mdui-text-color-white"><i
+                                        class="mdui-icon material-icons">share</i></button>
+                        </div>
+                    </div>
+
+                    <!-- 卡片的标题和副标题 -->
+                    <div class="mdui-card-primary">
+                        <div class="mdui-card-primary-title"><%= articles[value].name %></div>
+                        <div class="mdui-card-primary-subtitle"><%= articles[value].time %></div>
+                    </div>
+
+                    <!-- 卡片的内容 -->
+                    <div style="display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;" class="mdui-card-content">
+                        <%= articles[value].content %>
+                    </div>
+
+                    <!-- 卡片的按钮 -->
+                    <div class="mdui-card-actions">
+                        <button class="mdui-btn mdui-ripple">查看详情</button>
+                        <button class="mdui-btn mdui-btn-icon mdui-float-right"><i class="mdui-icon material-icons">expand_more</i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        <% } %>
+    </div>
+</div>

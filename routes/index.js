@@ -2,10 +2,70 @@ var express = require('express');
 var router = express.Router();
 var crypto = require('crypto');
 var User = require('../models/user');
+var Post = require('../models/post');
+const ObjectId = require('mongodb').ObjectId;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('page/index', { title: 'DdBlog 博客'});
+  let post = new Post(req.session.user,null,{});
+  post.get('articles',function (data) {
+    res.render('page/index', {articles: data});
+  });
+});
+
+//文章页面
+router.get('/articles/:id',function (req,res,next) {
+  let post = new Post(req.session.user,null,{_id: ObjectId(req.params.id)});
+  post.get('articles',function (data) {
+    let render_data = data[0];
+    res.render('page/articles',{title:'DdBlog - ' + render_data.name,data: render_data});
+  })
+});
+//评论处理
+router.post('/reviews',function (req,res,next) {
+  let post = new Post(req.session.user,null,{post_to: req.body.id});
+  post.get('reviews',function (data) {
+    res.send(JSON.stringify(data));
+  })
+});
+router.post('/reviews/post',function (req,res,next) {
+  if(!req.session.user){
+    return res.redirect('/login');
+  }
+  let date = new Date();
+  let post_content = {
+    post_to: req.body.id
+    ,user: req.session.user.name
+    ,content: req.body.content
+    ,time: date.toString()
+  };
+  let post = new Post(req.session.user,post_content,null);
+  post.save('reviews',function (data) {
+    res.send(JSON.stringify(data));
+  })
+});
+router.post('/reviews/delete/:username',function (req,res,next) {
+  console.log(req.params.username);
+  if(req.session.user.name != req.params.username){
+    return false;
+  }
+  let query = JSON.parse(req.body.data);
+  for(value in query){
+    query[value]._id = ObjectId(query[value]._id);
+  }
+  console.log(query);
+  let post = new Post(req.session.user,{},query);
+  let count = 0;
+  post.delete('reviews',function (result) {
+    count ++;
+    console.log(count);
+    if(count = query.length){
+      res.send({acknowledged: true,count: count});
+    }
+    else {
+      res.send({acknowledged: false});
+    }
+  });
 });
 
 //注册页面路由处理
@@ -88,9 +148,16 @@ router.post('/login', function (req, res) {
 router.post('/logout',checkLogin);
 router.post('/logout',function (req,res,next) {
   req.session.user = null;
-  res.end(JSON.stringify({logout:true}));
+  res.end(JSON.stringify({log:true}));
+});
+//上传文章或评论
+router.post('/post',checkLogin);
+router.post('/post',function (req,res,next) {
+
 });
 
+
+//检查登陆状态
 function checkNotLogin(req,res,next) {
   if(req.session.user){
     return res.redirect('/');
@@ -99,8 +166,8 @@ function checkNotLogin(req,res,next) {
 }
 function checkLogin(req,res,next) {
   if(!req.session.user){
-    res.send(JSON.stringify({logout: false}));
-    return false;
+    res.send(JSON.stringify({log: false}));
+    return res.redirect('/login');
   }
   next();
 }

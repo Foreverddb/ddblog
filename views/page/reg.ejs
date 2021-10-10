@@ -59,7 +59,7 @@
                     mdui.alert("注册成功！即将跳转至登录页面！");
                     setTimeout(function () {
                         window.location = '/login';
-                    },2000);
+                    },1500);
                 }
                 else {
                     mdui.alert('出现错误！注册失败');
@@ -71,5 +71,3 @@
         });
     }
 </script>
-<%- contentFor('title') %>
-<title><%= title %></title>

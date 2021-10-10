@@ -1,0 +1,45 @@
+<% if(!right){ %>
+    <script>
+        check();
+        function check() {
+            mdui.prompt('请输入管理员密码以验证', '权限验证',
+                function (value) {
+                    post_check(value);
+                },
+                function (value) {
+                    mdui.alert('请验证管理员密码！');
+                    check();
+                }
+            );
+        }
+        function post_check(value) {
+             $.ajax({
+                 type: 'post'
+                 ,url: '/admin/identify'
+                 ,data:{
+                     password: value
+                 }
+                 ,success: function (res) {
+                     res = JSON.parse(res);
+                    if(res.right){
+                        alert('验证成功！即将进入管理界面');
+                        window.location = '/admin';
+                    }
+                    else {
+                        alert('验证失败！请重试！');
+                        check();
+                    }
+
+                 }
+                 ,error: function (res) {
+                     alert(res);
+                 }
+             });
+
+        }
+    </script>
+<% }else{ %>
+
+
+
+<% } %>

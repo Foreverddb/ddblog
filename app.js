@@ -11,6 +11,7 @@ var util = require('util');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var adminRouter = require('./routes/admin');
 
 var app = express();
 
@@ -33,13 +34,18 @@ app.use(expressSession({
 
 //视图助手，来控制登录与否的视图变化
 app.use(function (req,res,next){
-  res.locals.motto = 'A brief blog for listening';
+  res.locals.motto = 'A brief blog for listening';//顶部导航栏显示语句
+  res.locals.long_motto = 'Just for turly Brief, to create a better iframe.';//背景长语句
+  res.locals.blog_title = 'DdBlog';//主页主标题
+  res.locals.title = 'DdBlog 博客系统';//网页标题
+  res.locals.adminName = db_config.admin.username;
   res.locals.user = req.session.user;
   next();
 });
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

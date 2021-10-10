@@ -42,7 +42,7 @@
                     mdui.alert("登录成功！即将跳转至主页！");
                     setTimeout(function () {
                         window.location = '/';
-                    },2000);
+                    },1500);
                 }
                 else {
                     mdui.alert('用户名或密码错误！请重试！');
@@ -54,5 +54,3 @@
         });
     }
 </script>
-<%- contentFor('title') %>
-<title><%= title %></title>

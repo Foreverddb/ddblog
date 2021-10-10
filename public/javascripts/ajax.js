@@ -1,11 +1,17 @@
-function ajax_post(url) {
+function ajax_post(url,data) {
+    var post = null;
+    if(data){
+        post = data;
+    }else {
+        post = {};
+    }
     $.ajax({
         type: 'post'
         ,url: url
-        ,data: {}
+        ,data: post
         ,success:function (res) {
             res = JSON.parse(res);
-            if(res.logout){
+            if(res.log){
                 mdui.alert('已退出登录！');
                 setTimeout(function () {
                     window.location = '/';

@@ -1,0 +1,71 @@
+<h1> &nbsp<%= username %></h1>
+<div class="mdui-tab" mdui-tab>
+    <a href="#example1-tab1" class="mdui-ripple">个人信息</a>
+    <a href="#example1-tab2" class="mdui-ripple">历史评论</a>
+</div>
+<div id="example1-tab1" class="mdui-p-a-2">
+    <ul class="mdui-list">
+        <li class="mdui-list-item mdui-ripple">
+            <i class="mdui-list-item-avatar mdui-icon material-icons">account_circle</i>
+            <div class="mdui-list-item-content">用户名：<%= username %></div>
+        </li>
+        <li class="mdui-list-item mdui-ripple">
+            <i class="mdui-list-item-avatar mdui-icon material-icons">folder</i>
+            <div class="mdui-list-item-content">暂无其他信息</div>
+        </li>
+    </ul>
+</div>
+<div id="example1-tab2" class="mdui-p-a-2">
+    <% if(reviews.length <= 0){ %>
+        <div class="mdui-typo-subheading-opacity">一条评论也没有~~</div>
+    <% }else{ %>
+        <form id="form">
+    <%    for(value in reviews){ %>
+            <div class="mdui-list">
+                <label class="mdui-list-item mdui-ripple">
+                    <% if(right){ %>
+                    <div class="mdui-checkbox">
+                        <input name="<%= reviews[value]['_id'] %>" type="checkbox"/>
+                        <i class="mdui-checkbox-icon"></i>
+                    </div>
+                     <% } %>
+                    <div class="mdui-list-item-content"><%= reviews[value]['content'] %>&nbsp;&nbsp; <a style="color: #00B7FF;" href="/articles/<%= reviews[value]['post_to'] %>">查看原文章</a></div>
+                    <i class="mdui-list-item-icon mdui-icon material-icons">chat</i>
+                </label>
+            </div>
+    <% } %>
+        </form>
+        <% if(right){ %>
+            <button onclick="delete_post()" class="mdui-btn">删除所选</button>
+            <script>
+                function delete_post() {
+                    let formData = $('#form').serializeArray();
+                    for(value in formData){
+                        delete formData[value].value;
+                        formData[value]._id = formData[value].name;
+                        delete formData[value].name;
+                    }
+                    console.log(formData);
+                    $.ajax({
+                        type: 'post'
+                        ,url: '/reviews/delete/' + '<%= username %>'
+                        ,data: {
+                            data: JSON.stringify(formData)
+                        }
+                        ,success: function (res) {
+                            if(res.acknowledged){
+                                mdui.alert("成功删除 " + res.count + "条评论");
+                                setTimeout(function () {
+                                    window.location = window.location.href;
+                                },1500);
+                            }
+                            else {
+                                mdui.alert('删除失败！');
+                            }
+                        }
+                    });
+                }
+            </script>
+        <% } %>
+    <% } %>
+</div>
