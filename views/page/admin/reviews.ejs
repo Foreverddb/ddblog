@@ -2,6 +2,7 @@
     <div class="mdui-typo-subheading-opacity">一条评论也没有~~</div>
 <% }else{ %>
     <form id="form">
+        <h1>评论管理</h1>
         <%    for(value in reviews){ %>
             <div class="mdui-list">
                 <label class="mdui-list-item mdui-ripple">
@@ -11,7 +12,7 @@
                             <i class="mdui-checkbox-icon"></i>
                         </div>
                     <% } %>
-                    <div class="mdui-list-item-content"><%= reviews[value]['content'] %>&nbsp;&nbsp; <a style="color: #00B7FF;" href="/articles/<%= reviews[value]['post_to'] %>">查看原文章</a></div>
+                        <div class="mdui-list-item-content"><strong>(用户：<a style="color: #00B7FF;" href="/users/<%= reviews[value]['user'] %>"><%= reviews[value]['user'] %></a>)</strong> &nbsp;<%= reviews[value]['content'] %> &nbsp;&nbsp; <a style="color: #00B7FF;" href="/articles/<%= reviews[value]['post_to'] %>">查看原文章</a></div>
                     <i class="mdui-list-item-icon mdui-icon material-icons">chat</i>
                 </label>
             </div>
