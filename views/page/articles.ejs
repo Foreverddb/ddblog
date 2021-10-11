@@ -69,7 +69,9 @@
                 res = JSON.parse(res);
                 if (res.acknowledged) {
                     mdui.alert('评论成功！');
-                    window.location = window.location.href;
+                    setTimeout(function () {
+                        window.location = window.location.href;
+                    },1000);
                 } else {
                     mdui.alert('评论失败！出现错误！');
                 }

@@ -48,7 +48,7 @@
                     console.log(formData);
                     $.ajax({
                         type: 'post'
-                        ,url: '/reviews/delete/' + '<%= username %>'
+                        ,url: '/reviews/delete'
                         ,data: {
                             data: JSON.stringify(formData)
                         }

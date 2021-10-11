@@ -21,7 +21,7 @@
                  }
                  ,success: function (res) {
                      res = JSON.parse(res);
-                    if(res.right){
+                    if(res.right == true){
                         alert('验证成功！即将进入管理界面');
                         window.location = '/admin';
                     }
@@ -39,7 +39,30 @@
         }
     </script>
 <% }else{ %>
+    <div class="mdui-tab" mdui-tab>
+        <a href="#example1-tab1" class="mdui-ripple">web</a>
+        <a href="#example1-tab2" class="mdui-ripple">shopping</a>
+        <a href="#reviews" onclick="get_reviews()" class="mdui-ripple">评论管理</a>
+    </div>
+    <div id="example1-tab1" class="mdui-p-a-2">web content</div>
+    <div id="example1-tab2" class="mdui-p-a-2">shopping content</div>
+    <div id="reviews" class="mdui-p-a-2"></div>
 
+    <script>
+        function get_reviews() {
+            $.ajax({
+                type: 'post'
+                ,url: '/admin/reviews'
+                ,data: {}
+                ,success: function (res) {
+                    $('body').html(res);
+                }
+                ,error: function (res) {
+                    alert(res);
+                }
+            });
+        }
 
+    </script>
 
 <% } %>

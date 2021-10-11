@@ -44,26 +44,22 @@ router.post('/reviews/post',function (req,res,next) {
     res.send(JSON.stringify(data));
   })
 });
-router.post('/reviews/delete/:username',function (req,res,next) {
-  console.log(req.params.username);
-  if(req.session.user.name != req.params.username){
-    return false;
-  }
+router.post('/reviews/delete',function (req,res,next) {
   let query = JSON.parse(req.body.data);
   for(value in query){
     query[value]._id = ObjectId(query[value]._id);
+    if(!req.session.user.admin) {
+      query[value].user = req.session.user.name;
+    }
   }
   console.log(query);
   let post = new Post(req.session.user,{},query);
   let count = 0;
   post.delete('reviews',function (result) {
     count ++;
-    console.log(count);
+    console.log('已删除评论条数：' + count);
     if(count = query.length){
       res.send({acknowledged: true,count: count});
-    }
-    else {
-      res.send({acknowledged: false});
     }
   });
 });

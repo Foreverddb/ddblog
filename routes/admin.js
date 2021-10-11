@@ -27,4 +27,20 @@ router.post('/identify',function (req,res,next) {
     res.send(JSON.stringify({right: req.session.user.admin}));
 });
 
+router.post('/reviews',function (req,res,next) {
+    console.log(req.session);
+    if(req.session.user.admin){
+        let post = new Post(req.session.user, null, {});
+        post.get('reviews', function (data) {
+            console.log(data);
+            res.render('page/admin/reviews', {
+                right: true
+                ,reviews: data
+            });
+        });
+    } else {
+        return res.send('你没有权限');
+    }
+});
+
 module.exports = router;

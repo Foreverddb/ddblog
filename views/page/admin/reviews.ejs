@@ -1,0 +1,52 @@
+<% if(reviews.length <= 0){ %>
+    <div class="mdui-typo-subheading-opacity">一条评论也没有~~</div>
+<% }else{ %>
+    <form id="form">
+        <%    for(value in reviews){ %>
+            <div class="mdui-list">
+                <label class="mdui-list-item mdui-ripple">
+                    <% if(right){ %>
+                        <div class="mdui-checkbox">
+                            <input name="<%= reviews[value]['_id'] %>" type="checkbox"/>
+                            <i class="mdui-checkbox-icon"></i>
+                        </div>
+                    <% } %>
+                    <div class="mdui-list-item-content"><%= reviews[value]['content'] %>&nbsp;&nbsp; <a style="color: #00B7FF;" href="/articles/<%= reviews[value]['post_to'] %>">查看原文章</a></div>
+                    <i class="mdui-list-item-icon mdui-icon material-icons">chat</i>
+                </label>
+            </div>
+        <% } %>
+    </form>
+    <% if(right){ %>
+        <button onclick="delete_post()" class="mdui-btn">删除所选</button>
+        <script>
+            function delete_post() {
+                let formData = $('#form').serializeArray();
+                for(value in formData){
+                    delete formData[value].value;
+                    formData[value]._id = formData[value].name;
+                    delete formData[value].name;
+                }
+                console.log(formData);
+                $.ajax({
+                    type: 'post'
+                    ,url: '/reviews/delete'
+                    ,data: {
+                        data: JSON.stringify(formData)
+                    }
+                    ,success: function (res) {
+                        if(res.acknowledged){
+                            mdui.alert("成功删除 " + res.count + "条评论");
+                            setTimeout(function () {
+                                window.location = window.location.href;
+                            },1500);
+                        }
+                        else {
+                            mdui.alert('删除失败！');
+                        }
+                    }
+                });
+            }
+        </script>
+    <% } %>
+<% } %>
