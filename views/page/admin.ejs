@@ -78,11 +78,7 @@
                 ,url: '/admin/' + type
                 ,data: {}
                 ,success: function (res) {
-                    if(type != 'main') {
-                        $('body').html(res);
-                    }else {
-                        $('main').html();
-                    }
+                    $('body').html(res);
                 }
                 ,error: function (res) {
                     alert(res);

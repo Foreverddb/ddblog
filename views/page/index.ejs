@@ -13,7 +13,7 @@
 
                     <!-- 卡片的媒体内容，可以包含图片、视频等媒体内容，以及标题、副标题 -->
                     <div class="mdui-card-media">
-                        <img src="https://cdn.w3cbus.com/mdui.org/docs/assets/docs/img/card.jpg"/>
+                        <img src="<%= articles[value].image %>"/>
 
                         <!-- 卡片中可以包含一个或多个菜单按钮 -->
                         <div class="mdui-card-menu">
@@ -28,10 +28,6 @@
                         <div class="mdui-card-primary-subtitle"><%= articles[value].time %></div>
                     </div>
 
-                    <!-- 卡片的内容 -->
-                    <div style="display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;" class="mdui-card-content">
-                        <%= articles[value].content %>
-                    </div>
 
                     <!-- 卡片的按钮 -->
                     <div class="mdui-card-actions">

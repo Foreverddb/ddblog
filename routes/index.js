@@ -19,8 +19,55 @@ router.get('/articles/:id',function (req,res,next) {
   post.get('articles',function (data) {
     let render_data = data[0];
     res.render('page/articles',{title:'DdBlog - ' + render_data.name,data: render_data});
-  })
+  });
 });
+router.post('/articles-edit/:id',function (req,res,next) {
+  let post = new Post(req.session.user,null,{_id: ObjectId(req.params.id)});
+  post.get('articles',function (data) {
+    let render_data = data[0];
+    res.send(render_data);
+  });
+});
+
+router.post('/articles/create',function (req,res,next) {
+  if(!req.session.user.admin){
+    res.send('你没有权限');
+  }else {
+    let date = new Date();
+    let post_content = {
+      name: req.body.name
+      ,category: req.body.category
+      ,image: req.body.category
+      ,content: req.body.content
+      ,time: date.toString()
+    };
+    console.log(post_content);
+    let post = new Post(req.session.user, post_content, null);
+    post.save('articles', function (data) {
+      res.send(data);
+    });
+  }
+});
+router.post('/articles/delete',function (req,res,next) {
+  if(!req.session.user.admin){
+    res.send('你没有权限');
+  }else {
+    let query = JSON.parse(req.body.data);
+    for(value in query){
+      query[value]._id = ObjectId(query[value]._id);
+    }
+    let post = new Post(req.session.user,{},query);
+    let count = 0;
+    post.delete('articles',function (result) {
+      count ++;
+      console.log('已删除文章数：' + count);
+      if(count = query.length){
+        res.send({acknowledged: true,count: count});
+      }
+    });
+  }
+});
+
 //评论处理
 router.post('/reviews',function (req,res,next) {
   let post = new Post(req.session.user,null,{post_to: req.body.id});

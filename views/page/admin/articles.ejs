@@ -5,6 +5,7 @@
 <% }else{ %>
     <form id="form">
         <h1>文章管理</h1>
+        <div id="main">
         <%    for(value in articles){ %>
             <div class="mdui-list">
                 <label class="mdui-list-item mdui-ripple">
@@ -15,14 +16,43 @@
                         </div>
                     <% } %>
                     <div class="mdui-list-item-content"><%= articles[value].name %> &nbsp;&nbsp;<a style="color: #00B7FF;" href="/articles/<%= articles[value]['_id'] %>">查看原文章</a></div>
-                    <i class="mdui-list-item-icon mdui-icon material-icons">chat</i>
+                    <a href="javascript:edit('<%= articles[value]['_id'] %>');" mdui-tooltip="{content:'编辑文章'}" class="mdui-btn mdui-btn-icon"><i class="mdui-list-item-icon mdui-icon material-icons">settings</i></a>
                 </label>
             </div>
         <% } %>
+        </div>
+        <iframe style="border:0;width: 100%;height: 0;" id="theeditor"></iframe>
     </form>
     <% if(right){ %>
         <button onclick="delete_post()" class="mdui-btn">删除所选</button>
         <script>
+            function setIframeHeight(iframe) {
+                if (iframe) {
+                    var iframeWin = iframe.contentWindow;
+                    if (iframeWin.document.body) {
+                        iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
+                    }
+                }
+            };
+            document.getElementById('theeditor').onload = function () {
+                setIframeHeight(document.getElementById('theeditor'));
+            };
+
+            function edit(id) {
+                $.ajax({
+                    type: 'post'
+                    ,url: '/articles-edit/' + id
+                    ,data: {}
+                    ,success: function (res) {
+                        $('#theeditor').css('height','');
+                        $('#theeditor')[0].src = '/TGeditor-master/TGeditor-master/editor.html';
+                        $('#main').html('');
+                    }
+                    ,error: function (res) {
+                        alert(res);
+                    }
+                });
+            }
             function delete_post() {
                 let formData = $('#form').serializeArray();
                 for(value in formData){
@@ -39,7 +69,7 @@
                     }
                     ,success: function (res) {
                         if(res.acknowledged){
-                            mdui.alert("成功删除 " + res.count + "条评论");
+                            mdui.alert("成功删除 " + res.count + "篇文章");
                             setTimeout(function () {
                                 window.location = window.location.href;
                             },1500);
@@ -50,6 +80,7 @@
                     }
                 });
             }
+
         </script>
     <% } %>
 <% } %>

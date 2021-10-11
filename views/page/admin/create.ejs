@@ -1,5 +1,19 @@
 <% if(right){ %>
+   <h1>新建文章</h1>
+   <iframe id="theeditor" style="border:0;width: 100%;" src="/TGeditor-master/TGeditor-master/editor.html">
 
-    fuck
-
+   </iframe>
+   <script>
+      function setIframeHeight(iframe) {
+         if (iframe) {
+            var iframeWin = iframe.contentWindow;
+            if (iframeWin.document.body) {
+               iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
+            }
+         }
+      };
+      document.getElementById('theeditor').onload = function () {
+         setIframeHeight(document.getElementById('theeditor'));
+      };
+   </script>
 <% } %>
