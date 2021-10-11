@@ -1,19 +1,20 @@
 <button onclick="javascript:window.location = '/admin';" class="mdui-btn mdui-btn-raised mdui-color-indigo">返回</button>
-<% if(reviews.length <= 0){ %>
-    <div class="mdui-typo-subheading-opacity">一条评论也没有~~</div>
+<button onclick="javascript:window.location = '/admin/create';" class="mdui-btn mdui-btn-raised mdui-color-light-blue">新建文章</button>
+<% if(articles.length <= 0){ %>
+    <div class="mdui-typo-subheading-opacity">一篇文章也没有~~</div>
 <% }else{ %>
     <form id="form">
-        <h1>评论管理</h1>
-        <%    for(value in reviews){ %>
+        <h1>文章管理</h1>
+        <%    for(value in articles){ %>
             <div class="mdui-list">
                 <label class="mdui-list-item mdui-ripple">
                     <% if(right){ %>
                         <div class="mdui-checkbox">
-                            <input name="<%= reviews[value]['_id'] %>" type="checkbox"/>
+                            <input name="<%= articles[value]['_id'] %>" type="checkbox"/>
                             <i class="mdui-checkbox-icon"></i>
                         </div>
                     <% } %>
-                        <div class="mdui-list-item-content"><strong>(用户：<a style="color: #00B7FF;" href="/users/<%= reviews[value]['user'] %>"><%= reviews[value]['user'] %></a>)</strong> &nbsp;<%= reviews[value]['content'] %> &nbsp;&nbsp; <a style="color: #00B7FF;" href="/articles/<%= reviews[value]['post_to'] %>">查看原文章</a></div>
+                    <div class="mdui-list-item-content"><%= articles[value].name %> &nbsp;&nbsp;<a style="color: #00B7FF;" href="/articles/<%= articles[value]['_id'] %>">查看原文章</a></div>
                     <i class="mdui-list-item-icon mdui-icon material-icons">chat</i>
                 </label>
             </div>
@@ -32,7 +33,7 @@
                 console.log(formData);
                 $.ajax({
                     type: 'post'
-                    ,url: '/reviews/delete'
+                    ,url: '/articles/delete'
                     ,data: {
                         data: JSON.stringify(formData)
                     }

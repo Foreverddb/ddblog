@@ -1,7 +1,7 @@
 <div overlay="true" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-toolbar-hide">
     <div class="mdui-toolbar mdui-color-theme">
         <a mdui-drawer="{target: '#left-drawer'}" href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">menu</i></a>
-        <a href="javascript:window.location = '/';" class="mdui-typo-headline">DdBlog</a>
+        <a href="javascript:window.location = '/';" class="mdui-typo-headline"><%= blogName %></a>
         <a href="javascript:;" class="mdui-typo-title"><%= motto %></a>
         <div class="mdui-toolbar-spacer"></div>
         <% if(user){if(user.name == adminName){ %>

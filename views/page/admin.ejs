@@ -39,23 +39,50 @@
         }
     </script>
 <% }else{ %>
-    <div class="mdui-tab" mdui-tab>
-        <a href="#example1-tab1" class="mdui-ripple">web</a>
-        <a href="#example1-tab2" class="mdui-ripple">shopping</a>
-        <a href="#reviews" onclick="get_reviews()" class="mdui-ripple">评论管理</a>
+    <div onload="get('main')" class="mdui-tab" mdui-tab>
+        <a href="#main" class="mdui-ripple">博客概况</a>
+        <a href="#articles" onclick="get('articles')" class="mdui-ripple">文章管理</a>
+        <a href="#reviews" onclick="get('reviews')" class="mdui-ripple">评论管理</a>
     </div>
-    <div id="example1-tab1" class="mdui-p-a-2">web content</div>
-    <div id="example1-tab2" class="mdui-p-a-2">shopping content</div>
+    <div id="main" class="mdui-p-a-2">
+        <ul class="mdui-list">
+            <li class="mdui-list-item mdui-ripple">
+                <i class="mdui-list-item-avatar mdui-icon material-icons">account_circle</i>
+                <div class="mdui-list-item-content">管理员用户：<%= adminName %></div>
+            </li>
+            <li class="mdui-list-item mdui-ripple">
+                <i class="mdui-list-item-avatar mdui-icon material-icons">folder</i>
+                <div class="mdui-list-item-content">博客名称：<%= blogName %></div>
+            </li>
+            <li class="mdui-list-item mdui-ripple">
+                <i class="mdui-list-item-avatar mdui-icon material-icons">assignment</i>
+                <div class="mdui-list-item-content">网页标题：<%= title %></div>
+            </li>
+            <li class="mdui-list-item mdui-ripple">
+                <i class="mdui-list-item-avatar mdui-icon material-icons">chat</i>
+                <div class="mdui-list-item-content">导航栏标语：<%= motto %></div>
+            </li>
+            <li class="mdui-list-item mdui-ripple">
+                <i class="mdui-list-item-avatar mdui-icon material-icons">chat</i>
+                <div class="mdui-list-item-content">副标语：<%= long_motto %></div>
+            </li>
+        </ul>
+    </div>
+    <div id="articles" class="mdui-p-a-2"></div>
     <div id="reviews" class="mdui-p-a-2"></div>
 
     <script>
-        function get_reviews() {
+        function get(type) {
             $.ajax({
                 type: 'post'
-                ,url: '/admin/reviews'
+                ,url: '/admin/' + type
                 ,data: {}
                 ,success: function (res) {
-                    $('body').html(res);
+                    if(type != 'main') {
+                        $('body').html(res);
+                    }else {
+                        $('main').html();
+                    }
                 }
                 ,error: function (res) {
                     alert(res);

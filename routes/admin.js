@@ -27,8 +27,22 @@ router.post('/identify',function (req,res,next) {
     res.send(JSON.stringify({right: req.session.user.admin}));
 });
 
+router.post('/articles',function (req,res,next) {
+    if(req.session.user.admin){
+        let post = new Post(req.session.user, null, {});
+        post.get('articles', function (data) {
+            console.log(data);
+            res.render('page/admin/articles', {
+                right: true
+                ,articles: data
+            });
+        });
+    } else {
+        return res.send('你没有权限');
+    }
+});
+
 router.post('/reviews',function (req,res,next) {
-    console.log(req.session);
     if(req.session.user.admin){
         let post = new Post(req.session.user, null, {});
         post.get('reviews', function (data) {
@@ -40,6 +54,16 @@ router.post('/reviews',function (req,res,next) {
         });
     } else {
         return res.send('你没有权限');
+    }
+});
+
+router.get('/create',function (req,res,next) {
+    if(req.session.user.admin){
+        res.render('page/admin/create',{
+            right: true
+        });
+    }else {
+        res.send('你没有权限！');
     }
 });
 

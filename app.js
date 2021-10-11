@@ -38,6 +38,7 @@ app.use(function (req,res,next){
   res.locals.long_motto = 'Just for turly Brief, to create a better iframe.';//背景长语句
   res.locals.blog_title = 'DdBlog';//主页主标题
   res.locals.title = 'DdBlog 博客系统';//网页标题
+  res.locals.blogName = 'DdBlog';
   res.locals.adminName = db_config.admin.username;
   res.locals.user = req.session.user;
   next();
