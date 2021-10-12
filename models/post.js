@@ -45,6 +45,11 @@ Post.prototype = {
                 dbo.collection(type).deleteOne(that.query[value], function (err, res) {
                     callback(res);
                 });
+                if(type == 'articles'){
+                    dbo.collection('reviews').deleteMany({post_to: that.query[value]._id.toString()}, function (err,res) {
+                        console.log(res);
+                    });
+                }
             }
         });
     }
@@ -52,7 +57,7 @@ Post.prototype = {
         let that = this;
         Db(function (err,db) {
             let dbo = db.db(Db.name);
-            dbo.collection(type).update(that.query,that.post,function (err,data) {
+            dbo.collection(type).updateOne(that.query,that.post,function (err,data) {
                 callback(data);
                 db.close();
             });

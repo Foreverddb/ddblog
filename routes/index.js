@@ -13,12 +13,29 @@ router.get('/', function(req, res, next) {
   });
 });
 
+//搜索
+router.get('/search',function (req,res,next) {
+  res.render('page/search');
+});
+router.post('/search',function (req,res,next) {
+  let post = new Post(req.session.user,null,{name: req.body.query});
+  post.get('articles',function (data) {
+    res.render('page/index', {articles: data});
+  });
+});
+
 //文章页面
 router.get('/articles/:id',function (req,res,next) {
   let post = new Post(req.session.user,null,{_id: ObjectId(req.params.id)});
   post.get('articles',function (data) {
-    let render_data = data[0];
-    res.render('page/articles',{title:'DdBlog - ' + render_data.name,data: render_data});
+
+    if(data.length > 0){
+      let render_data = data[0];
+      res.render('page/articles',{title:'DdBlog - ' + render_data.name,data: render_data});
+    }else {
+      res.send('此文章可能已被删除。');
+    }
+
   });
 });
 router.post('/articles-edit/:id',function (req,res,next) {
@@ -53,9 +70,16 @@ router.post('/articles/create',function (req,res,next) {
       });
     }else {
       let query = {_id: ObjectId(req.body.id)};
+      post_content = {$set: {
+        name: req.body.name
+        ,category: req.body.category
+        ,image: image
+        ,content: req.body.content
+        ,time: date.toString()
+      }};
       let post = new Post(req.session.user, post_content, query);
-      post.update('articles',function (res) {
-        console.log(res);
+      post.update('articles',function (data) {
+        res.send(data);
       });
     }
   }

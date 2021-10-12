@@ -10,48 +10,50 @@ MongoClient.connect(url, function (err, db) {
     }
     console.log("已连接至数据库" + config.name);
     let dbo = db.db(config.name);
+    var md5 = crypto.createHash('md5');
+    var task = 0;
 
-    // dbo.createCollection('user',function (err,res) {
-    //     if(err){
-    //         throw err;
-    //     }
-    //     console.log('已创建集合user');
-    // });
-    // dbo.createCollection('reviews',function (err,res) {
-    //     if(err){
-    //         throw err;
-    //     }
-    //     console.log('已创建集合reviews');
-    // });
-    // dbo.createCollection('articles',function (err,res) {
-    //     if(err){
-    //         throw err;
-    //     }
-    //     console.log('已创建集合articles');
-    // });
-    // var md5 = crypto.createHash('md5');
-    // dbo.collection('user').insertOne({
-    //     name: config.admin.username
-    //     ,pass: md5.update(config.admin.password).digest('base64')
-    // },function (err,res) {
-    //     if(err){
-    //         throw err;
-    //     }
-    //     console.log("创建管理员账户：" + res.acknowledged);
-    // });
+    dbo.createCollection('user',function (err,res) {
+        if(err){
+            throw err;
+        }
+        console.log('已创建集合user');
+        dbo.collection('user').insertOne({
+            name: config.admin.username
+            ,pass: md5.update(config.admin.password).digest('base64')
+        },function (err,res) {
+            if(err){
+                throw err;
+            }
+            console.log("创建管理员账户：" + res.acknowledged);
+            task ++;
+            checkLoad();
+        });
+    });
+    dbo.createCollection('reviews',function (err,res) {
+        if(err){
+            throw err;
+        }
+        console.log('已创建集合reviews');
+        task ++;
+    });
+    dbo.createCollection('articles',function (err,res) {
+        if(err){
+            throw err;
+        }
+        console.log('已创建集合articles');
+        task ++;
 
-    // let date = new Date();
-    // let newdate = new Date(date.getTime() + 3600*8*1000);
-    // dbo.collection('articles').insertOne({
-    //     name: 'Hello World'
-    //     ,time: newdate.toString()
-    //     ,content: 'Hello World!It looks like that you have successfully build the blog'
-    //     ,image: 'https://cdn.w3cbus.com/mdui.org/docs/assets/docs/img/card.jpg'
-    // },function (err,res) {
-    //     if(err){
-    //         throw err;
-    //     }
-    //     console.log("创建测试文章：" + res.acknowledged);
-    // });
+    });
+
+    function checkLoad() {
+        if(task == 3){
+            console.log('初始化数据库完成！');
+            db.close(function () {
+                console.log('数据库连接已关闭！请运行 npm start 命令以运行博客框架！');
+            });
+        }
+    }
+
 
 });
