@@ -42,16 +42,18 @@
 <form id="form" method="post">
     <div id="user-input" class="mdui-textfield mdui-textfield-floating-label">
         <label class="mdui-textfield-label">文章名称</label>
-        <input name="name" class="mdui-textfield-input" type="text" maxlength="20"/>
+        <input id="name_text" name="name" class="mdui-textfield-input" type="text" maxlength="20"/>
     </div>
     <div class="mdui-textfield mdui-textfield-floating-label">
         <label class="mdui-textfield-label">分类</label>
-        <input name="category" class="mdui-textfield-input" type="text" maxlength="20">
+        <input id="category_text" name="category" class="mdui-textfield-input" type="text" maxlength="20">
     </div>
     <div class="mdui-textfield mdui-textfield-floating-label">
-        <label class="mdui-textfield-label">头图链接</label>
-        <input name="image" class="mdui-textfield-input" type="text">
+        <label class="mdui-textfield-label">头图链接(不填则为默认图片)</label>
+        <input id="image_text" name="image" class="mdui-textfield-input" type="text">
     </div>
+    <input id="edit_text" name="edit" type="hidden">
+    <input id="id_text" name="id" type="hidden">
 </form>
 
 <div id="editor">
@@ -162,7 +164,7 @@
                             ,data: formData
                             ,success: function (res) {
                                 if(res.acknowledged){
-                                    mdui.alert('文章发表成功！');
+                                    alert('文章发表成功！');
                                     setTimeout(function () {
                                         window.parent.location = '/admin';
                                     },1000);

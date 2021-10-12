@@ -18,7 +18,7 @@ Post.prototype = {
        let that = this;
         Db(function (err,db) {
             let dbo = db.db(Db.name);
-            dbo.collection(type).find(that.query).toArray(function (err,data) {
+            dbo.collection(type).find(that.query).sort({_id: -1}).toArray(function (err,data) {
                 callback(data);
                 db.close();
             });
@@ -46,6 +46,16 @@ Post.prototype = {
                     callback(res);
                 });
             }
+        });
+    }
+    ,update: function (type,callback) {
+        let that = this;
+        Db(function (err,db) {
+            let dbo = db.db(Db.name);
+            dbo.collection(type).update(that.query,that.post,function (err,data) {
+                callback(data);
+                db.close();
+            });
         });
     }
 };

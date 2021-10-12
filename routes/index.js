@@ -34,18 +34,30 @@ router.post('/articles/create',function (req,res,next) {
     res.send('你没有权限');
   }else {
     let date = new Date();
+    let image = 'https://cdn.w3cbus.com/mdui.org/docs/assets/docs/img/card.jpg';
+    if(req.body.image && req.body.image != ''){
+      image = req.body.image;
+    }
+    console.log(req.body);
     let post_content = {
       name: req.body.name
       ,category: req.body.category
-      ,image: req.body.category
+      ,image: image
       ,content: req.body.content
       ,time: date.toString()
     };
-    console.log(post_content);
-    let post = new Post(req.session.user, post_content, null);
-    post.save('articles', function (data) {
-      res.send(data);
-    });
+    if(!req.body.edit || req.body.edit != 'true') {
+      let post = new Post(req.session.user, post_content, null);
+      post.save('articles', function (data) {
+        res.send(data);
+      });
+    }else {
+      let query = {_id: ObjectId(req.body.id)};
+      let post = new Post(req.session.user, post_content, query);
+      post.update('articles',function (res) {
+        console.log(res);
+      });
+    }
   }
 });
 router.post('/articles/delete',function (req,res,next) {
@@ -61,7 +73,7 @@ router.post('/articles/delete',function (req,res,next) {
     post.delete('articles',function (result) {
       count ++;
       console.log('已删除文章数：' + count);
-      if(count = query.length){
+      if(count == query.length){
         res.send({acknowledged: true,count: count});
       }
     });
