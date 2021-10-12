@@ -50,12 +50,6 @@ node models/db-init.js
 
 
 
-## 代码
-
-在文件压缩包中可以查看代码，或者访问 https://github.com/foreverddb/ddblog
-
-
-
 ## 开源协议
 
 本项目基于 **MIT LICENSE** 开源。 
