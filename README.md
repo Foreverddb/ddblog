@@ -50,6 +50,10 @@ node models/db-init.js
 
 
 
+### DEMO
+
+可以访问 http://159.75.112.99 查看效果
+
 ## 开源协议
 
 本项目基于 **MIT LICENSE** 开源。 
